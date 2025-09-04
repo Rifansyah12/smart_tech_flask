@@ -230,22 +230,34 @@
         >
           <i class="fas fa-vial"></i> Smart Nose
         </a>
-        <a href="#" class="btn smart-btn smart-btn-house m-2">
-          <i class="fas fa-home"></i> Smart House
+        <a
+          href="{{ url_for('smart_house_dashboard') }}"
+          class="btn smart-btn smart-btn-house m-2"
+        >
+          <i class="fas fa-home"></i> Sensor ZNO/RGO
         </a>
-        <a href="#" class="btn smart-btn smart-btn-plts m-2">
+        <a
+          href="{{ url_for('smart_plts_dashboard') }}"
+          class="btn smart-btn smart-btn-plts m-2"
+        >
           <i class="fas fa-solar-panel"></i> Smart PLTS
         </a>
         <a
-          href="{{ url_for('smart_nose_dashboard') }}"
+          href="{{ url_for('smart_parking_dashboard') }}"
           class="btn smart-btn smart-btn-parking m-2"
         >
           <i class="fas fa-car"></i> Smart Parking
         </a>
-        <a href="#" class="btn smart-btn smart-btn-trash m-2">
+        <a
+          href="{{ url_for('smart_trash_dashboard') }}"
+          class="btn smart-btn smart-btn-trash m-2"
+        >
           <i class="fas fa-trash"></i> Smart Trash
         </a>
-        <a href="#" class="btn smart-btn smart-btn-park m-2">
+        <a
+          href="{{ url_for('smart_greenPark_dashboard') }}"
+          class="btn smart-btn smart-btn-park m-2"
+        >
           <i class="fas fa-tree"></i> Greend Park
         </a>
       </div>

@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, session, url_for, m
 import pymysql
 import bcrypt
 import traceback
+import paho.mqtt.client as mqtt
+import threading
+
 
 app = Flask(__name__)
 app.secret_key = '12345'
@@ -14,6 +17,45 @@ def get_db_connection():
         database="smart_nose",
         cursorclass=pymysql.cursors.DictCursor
     )
+
+
+# Konfigurasi MQTT
+BROKER = "smartnose-uninus.cloud.shiftr.io"
+PORT = 1883
+USERNAME = "smartnose-uninus"
+PASSWORD = "0DKItrqWCc9bbr5w"
+TOPIC = "smartnose-uninus/#" 
+
+
+def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+        print("✅ MQTT Connected to Shiftr.io")
+        client.subscribe(TOPIC, qos=1)
+    else:
+        print("❌ MQTT Connection failed with code", rc)
+
+def on_message(client, userdata, msg):
+    print(f"📩 Pesan diterima di {msg.topic}: {msg.payload.decode()}")
+
+client = mqtt.Client(client_id="vsmqtt_client_5d7e")  # Client ID bisa custom
+client.username_pw_set(USERNAME, PASSWORD)
+client.on_connect = on_connect
+client.on_message = on_message
+
+def mqtt_loop():
+    client.connect(BROKER, PORT, 60)
+    client.loop_forever()
+
+# Jalankan MQTT di background thread
+threading.Thread(target=mqtt_loop, daemon=True).start()
+
+# Contoh route untuk publish ke broker
+@app.route("/send_mqtt")
+def send_mqtt():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    client.publish("smartnose-uninus/test", "Halo dari Flask + Shiftr.io", qos=1)
+    return "Pesan MQTT terkirim ke Shiftr.io!"
 
 # ------------------------
 # Fungsi untuk mencegah cache browser
@@ -39,13 +81,57 @@ def index():
 @nocache
 def login():
     return proses_login_smart("login.html", "smart_index")
-
+# smart_nose
 @app.route("/smart/smart_nose/dashboard")
 @nocache
 def smart_nose_dashboard():
     if 'username' not in session:
         return redirect(url_for('login'))
     return render_template("smart/smart_nose/dashboard.html")
+
+# smart_house
+@app.route("/smart/smart_house/dashboard")
+@nocache
+def smart_house_dashboard():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template("smart/smart_house/dashboard.html")
+
+# smart_parking
+@app.route("/smart/smart_parking/dashboard")
+@nocache
+def smart_parking_dashboard():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template("smart/smart_parking/dashboard.html")
+
+# smart_trash
+@app.route("/smart/smart_trash/dashboard")
+@nocache
+def smart_trash_dashboard():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template("smart/smart_trash/dashboard.html")
+
+# smart_plts
+@app.route("/smart/smart_plts/dashboard")
+@nocache
+def smart_plts_dashboard():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template("smart/smart_plts/dashboard.html")
+
+# smart_green_park
+@app.route("/smart/smart_greenPark/dashboard")
+@nocache
+def smart_greenPark_dashboard():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template("smart/smart_greenPark/dashboard.html")
+
+
+
+
 
 @app.route("/smart/index")
 @nocache

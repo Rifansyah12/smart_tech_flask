@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SMART Nose</title>
+    <title>SMART Green Park</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link
@@ -74,7 +74,7 @@
             class="brand-image img-circle elevation-3"
             style="opacity: 0.8"
           />
-          <span class="brand-text font-weight-light">SMART NOSE</span>
+          <span class="brand-text font-weight-light">SMART Green Park</span>
         </a>
 
         <!-- Sidebar -->
@@ -120,7 +120,7 @@
             >
               <li class="nav-item">
                 <a
-                  href="{{ url_for('smart_nose_dashboard') }}"
+                  href="{{ url_for('smart_greenPark_dashboard') }}"
                   class="nav-link"
                 >
                   <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -176,7 +176,7 @@
         <div class="content">
           <div class="container-fluid">
             <div class="row">
-              <div class="col-lg-2">
+              <div class="col-lg-4">
                 <div class="small-box bg-green">
                   <!-- end loading -->
                   <div class="inner">
@@ -185,11 +185,11 @@
                     <p>Deteksi Kadar Alkohol (Sensor MQ-3)</p>
                   </div>
                   <div class="icon">
-                    <i class="fas fa-temperature-high fa-xs"></i>
+                    <i class="fas fa-temperature-high"></i>
                   </div>
                 </div>
               </div>
-              <div class="col-lg-2">
+              <div class="col-lg-4">
                 <div class="small-box bg-green">
                   <!-- end loading -->
                   <div class="inner">
@@ -201,31 +201,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-2">
-                <div class="small-box bg-green">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3><span id="bac">-</span> %</h3>
-                    <p>Blood Alcohol Concentration</p>
-                  </div>
-                  <div class="icon">
-                    <i class="fas fa-water"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <div class="small-box bg-green">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3><span id="bac">-</span> %</h3>
-                    <p>Blood Alcohol Concentration</p>
-                  </div>
-                  <div class="icon">
-                    <i class="fas fa-water"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-2">
+              <div class="col-lg-4">
                 <div class="small-box bg-red">
                   <!-- end loading -->
                   <div class="inner">
@@ -237,7 +213,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-2">
+              <div class="col-lg-4">
                 <div class="small-box bg-red">
                   <!-- end loading -->
                   <div class="inner">
@@ -249,7 +225,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-2">
+              <div class="col-lg-4">
                 <div class="small-box bg-red">
                   <!-- end loading -->
                   <div class="inner">
@@ -261,99 +237,16 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-2">
-                <div class="small-box bg-red">
+              <div class="col-lg-4">
+                <div class="small-box bg-maroon">
                   <!-- end loading -->
                   <div class="inner">
-                    <h3><span id="bac">-</span> %</h3>
-                    <p>Deteksi Kadar Amonia (Sensor MQ 137)</p>
+                    <h3 id="kelembaban">-</h3>
+                    <p>Kelembaban</p>
                   </div>
+
                   <div class="icon">
-                    <i class="fas fa-water"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <div class="small-box bg-red">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3><span id="bac">-</span> %</h3>
-                    <p>Deteksi Kadar Amonia (Sensor MQ 137)</p>
-                  </div>
-                  <div class="icon">
-                    <i class="fas fa-water"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <div class="small-box bg-red">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3><span id="bac">-</span> %</h3>
-                    <p>Deteksi Kadar Amonia (Sensor MQ 137)</p>
-                  </div>
-                  <div class="icon">
-                    <i class="fas fa-water"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <div class="small-box bg-red">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3><span id="bac">-</span> %</h3>
-                    <p>Deteksi Kadar Amonia (Sensor MQ 137)</p>
-                  </div>
-                  <div class="icon">
-                    <i class="fas fa-water"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <div class="small-box bg-red">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3><span id="bac">-</span> %</h3>
-                    <p>Deteksi Kadar Amonia (Sensor MQ 137)</p>
-                  </div>
-                  <div class="icon">
-                    <i class="fas fa-water"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <div class="small-box bg-red">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3><span id="bac">-</span> %</h3>
-                    <p>Deteksi Kadar Amonia (Sensor MQ 137)</p>
-                  </div>
-                  <div class="icon">
-                    <i class="fas fa-water"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <div class="small-box bg-red">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3><span id="bac">-</span> %</h3>
-                    <p>Deteksi Kadar Amonia (Sensor MQ 137)</p>
-                  </div>
-                  <div class="icon">
-                    <i class="fas fa-water"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <div class="small-box bg-red">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3><span id="bac">-</span> %</h3>
-                    <p>Deteksi Kadar Amonia (Sensor MQ 137)</p>
-                  </div>
-                  <div class="icon">
-                    <i class="fas fa-water"></i>
+                    <i class="fas fa-tachometer-alt"></i>
                   </div>
                 </div>
               </div>
@@ -408,7 +301,7 @@
       <footer class="main-footer">
         <div class="float-right d-none d-sm-inline">Versi 5.0</div>
         <strong
-          >Copyright &copy; Sistem SMART NOSE 2025-2028
+          >Copyright &copy; Sistem SMART TECH 2025-2028
           <a href="https://adminlte.io">UNINUS.COM</a>.</strong
         >
         All rights reserved.
