@@ -4,6 +4,7 @@ import bcrypt
 import traceback
 import paho.mqtt.client as mqtt
 import threading
+from flask import jsonify
 
 
 app = Flask(__name__)
@@ -33,9 +34,30 @@ def on_connect(client, userdata, flags, rc):
         client.subscribe(TOPIC, qos=1)
     else:
         print("❌ MQTT Connection failed with code", rc)
+mqtt_data = []
 
 def on_message(client, userdata, msg):
-    print(f"📩 Pesan diterima di {msg.topic}: {msg.payload.decode()}")
+    try:
+        payload = msg.payload.decode()
+        print(f"📩 Pesan diterima di {msg.topic}: {payload}")
+
+        data = {
+            "id": len(mqtt_data) + 1,
+            "serial_number": "SN001",   
+            "sensor_actuator": "sensor",
+            "value": payload,
+            "name": "Sensor A",
+            "mqtt_topic": msg.topic
+        }
+        mqtt_data.append(data)
+
+        # batasi hanya 100 data terakhir
+        if len(mqtt_data) > 100:
+            mqtt_data.pop(0)
+
+    except Exception as e:
+        print("❌ Error parsing MQTT message:", e)
+
 
 client = mqtt.Client(client_id="vsmqtt_client_5d7e")  # Client ID bisa custom
 client.username_pw_set(USERNAME, PASSWORD)
@@ -69,6 +91,32 @@ def nocache(view):
         return resp
     no_cache.__name__ = view.__name__
     return no_cache
+
+# endpoint_device
+@app.route("/api/device_info")
+def api_device_info():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT serial_number, mcu_type, location, created_time, active
+            FROM devices
+            ORDER BY created_time DESC LIMIT 1
+        """)
+        device = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if device:
+            # Normalisasi nilai active
+            device["active"] = True if str(device["active"]).lower() in ["1", "yes", "true"] else False
+            return jsonify(device)
+        else:
+            return jsonify({})
+    except Exception as e:
+        print("❌ Error get device info:", e)
+        return jsonify({})
+
 
 # ------------------------
 # Routes
@@ -191,6 +239,14 @@ def proses_login_smart(template_name, index_route):
             traceback.print_exc()
             return render_template(template_name, message="Terjadi kesalahan di server")
     return render_template(template_name)
+
+
+
+
+
+@app.route("/api/mqtt_data")
+def api_mqtt_data():
+    return jsonify(mqtt_data)
 
 if __name__ == "__main__":
     app.run(debug=True)
