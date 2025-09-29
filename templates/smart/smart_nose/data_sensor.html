@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Sensor - SmartNose</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      /* 🔹 Tambahan Dark Mode */
+      .dark {
+        background: #121212 !important;
+        color: #f5f5f5 !important;
+      }
+      .dark .card {
+        background: rgba(30, 30, 30, 0.9) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+      }
+      .dark nav {
+        background: rgba(20, 20, 20, 0.9) !important;
+      }
+      .dark table th,
+      .dark table td {
+        border-color: rgba(255, 255, 255, 0.2) !important;
+      }
+      .dark #settingsModal > div {
+        background: #1e1e1e !important;
+        color: #f5f5f5 !important;
+      }
+      .dark #settingsModal h2 {
+        color: #00ffff;
+      }
+      .dark #settingsModal label span {
+        color: #f5f5f5;
+      }
+      .dark #settingsModal button {
+        color: #fff;
+      }
+      .dark #settingsModal button.bg-gray-200 {
+        background: #333 !important;
+        color: #f5f5f5 !important;
+      }
+      .dark #settingsModal button.bg-gray-200:hover {
+        background: #444 !important;
+      }
+      .dark #settingsModal button.bg-indigo-600 {
+        background: #00bcd4 !important;
+      }
+      .dark #settingsModal button.bg-indigo-600:hover {
+        background: #0097a7 !important;
+      }
+      .dark footer {
+        background: rgba(20, 20, 20, 0.9) !important;
+        color: #f5f5f5 !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <!-- Navbar -->
+    <nav
+      class="bg-gradient-to-r from-indigo-500 to-purple-600 bg-opacity-80 backdrop-blur-md shadow-lg sticky top-0 z-50"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <h1 class="text-2xl font-bold text-white">Smart Nose</h1>
+          </div>
+          <div class="flex items-center">
+            <button
+              class="menu-toggle md:hidden text-gray-700 hover:text-indigo-600 p-2"
+              onclick="toggleMenu()"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
+            <div class="nav-menu hidden md:flex space-x-8">
+              <a
+                href="{{ url_for('dashboard.smart_nose') }}"
+                class="nav-link text-white bg-indigo-600 px-4 py-2 rounded-full font-medium"
+                >Beranda</a
+              >
+              <a
+                href="{{ url_for('sensor.data_sensor') }}"
+                class="nav-link text-gray-100 hover:text-indigo-600 px-4 py-2 rounded-full font-medium hover:bg-gray-100"
+                >Data Sensor</a
+              >
+              <a
+                href="javascript:void(0)"
+                onclick="openSettings()"
+                class="nav-link text-gray-100 hover:text-indigo-600 px-4 py-2 rounded-full font-medium hover:bg-gray-100"
+              >
+                Pengaturan
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+      <h2 class="text-2xl font-bold text-white mb-6">
+        📊 Data Sensor Perangkat
+      </h2>
+
+      <!-- Grid Chart -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+        {% for i in range(1,7) %}
+        <div
+          class="card p-3 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg"
+        >
+          <h3 class="text-sm font-semibold text-white text-center mb-2">
+            Sensor {{ i }}
+          </h3>
+          <div class="h-[150px] w-full">
+            <canvas id="chartSensor{{ i }}"></canvas>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Tabel -->
+      <div class="card mt-8">
+        <h3 class="text-lg font-semibold mb-4">Tabel Data Sensor</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm text-gray-800">
+            <thead class="bg-indigo-500 text-white">
+              <tr>
+                <th class="px-4 py-2">No</th>
+                <th class="px-4 py-2">Waktu</th>
+                <th class="px-4 py-2">Sensor 1</th>
+                <th class="px-4 py-2">Sensor 2</th>
+                <th class="px-4 py-2">Sensor 3</th>
+                <th class="px-4 py-2">Sensor 4</th>
+                <th class="px-4 py-2">Sensor 5</th>
+                <th class="px-4 py-2">Sensor 6</th>
+              </tr>
+            </thead>
+            <tbody id="sensor-table-body" class="text-center">
+              <tr>
+                <td colspan="8" class="py-4">Menunggu data...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal Pengaturan -->
+    <div
+      id="settingsModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-2xl shadow-lg w-96 p-6">
+        <h2 class="text-lg font-bold mb-4">⚙️ Pengaturan</h2>
+        <div class="space-y-3">
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" class="form-checkbox" id="darkModeToggle" />
+            <span>Aktifkan Mode Gelap</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" class="form-checkbox" id="notifToggle" />
+            <span>Notifikasi MQTT</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              class="form-checkbox"
+              id="autoScrollToggle"
+              checked
+            />
+            <span>Auto-scroll Tabel</span>
+          </label>
+        </div>
+        <div class="mt-6 flex justify-end space-x-3">
+          <button
+            onclick="closeSettings()"
+            class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+          >
+            Batal
+          </button>
+          <button
+            onclick="saveSettings()"
+            class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+          >
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer
+      class="mt-12 bg-white/10 backdrop-blur-md border-t border-white/20 py-6 text-center text-sm text-white"
+    >
+      <p>© 2025 SmartNose. All rights reserved.</p>
+    </footer>
+
+    <!-- 🔹 Script Chart -->
+    <script>
+      const chartIds = [
+        "chartSensor1",
+        "chartSensor2",
+        "chartSensor3",
+        "chartSensor4",
+        "chartSensor5",
+        "chartSensor6",
+      ];
+      const charts = [];
+
+      function createGradient(ctx, area, color1, color2) {
+        const gradient = ctx.createLinearGradient(0, area.bottom, 0, area.top);
+        gradient.addColorStop(0, color1);
+        gradient.addColorStop(1, color2);
+        return gradient;
+      }
+
+      chartIds.forEach((id, i) => {
+        const ctx = document.getElementById(id).getContext("2d");
+        charts[i] = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: `Sensor ${i + 1}`,
+                data: [],
+                fill: true,
+                backgroundColor: (context) => {
+                  const { chart } = context;
+                  const { ctx, chartArea } = chart;
+                  if (!chartArea) return null;
+                  return createGradient(
+                    ctx,
+                    chartArea,
+                    "rgba(0, 255, 204, 0.1)",
+                    "rgba(0, 255, 255, 0.5)"
+                  );
+                },
+                borderColor: "rgba(0, 255, 255, 0.9)",
+                borderWidth: 2,
+                tension: 0.4,
+                pointRadius: 2,
+                pointBackgroundColor: "#00ffff",
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#ffffff",
+                pointHoverBorderColor: "#00ffff",
+                pointHoverBorderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  color: "#e0e0ff",
+                  font: { size: 10, weight: "bold" },
+                },
+              },
+              tooltip: {
+                backgroundColor: "rgba(20,20,40,0.9)",
+                borderColor: "#00ffff",
+                borderWidth: 1,
+                titleColor: "#00ffff",
+                bodyColor: "#ffffff",
+                cornerRadius: 8,
+                padding: 6,
+              },
+            },
+            scales: {
+              x: {
+                ticks: { color: "#ffffff", display: false },
+                grid: { color: "rgba(255,255,255,0.2)" },
+              },
+              y: {
+                ticks: { color: "#ffffff", display: false },
+                grid: { color: "rgba(255,255,255,0.2)" },
+                beginAtZero: true,
+              },
+            },
+            animations: {
+              tension: {
+                duration: 1500,
+                easing: "easeInOutQuad",
+                from: 0.5,
+                to: 0.4,
+                loop: true,
+              },
+            },
+          },
+        });
+      });
+
+      async function fetchSensorData() {
+        try {
+          const res = await fetch("/api/sensor_data");
+          const data = await res.json();
+          if (!data) return;
+
+          const now = new Date().toLocaleTimeString();
+
+          charts.forEach((chart, i) => {
+            const value = data[`sensor${i + 1}`] ?? 0; // ✅ ambil langsung dari object
+            chart.data.labels.push(now);
+            chart.data.datasets[0].data.push(value);
+
+            if (chart.data.labels.length > 20) {
+              chart.data.labels.shift();
+              chart.data.datasets[0].data.shift();
+            }
+            chart.update();
+          });
+
+          // 🔹 Update tabel
+          const tbody = document.getElementById("sensor-table-body");
+          const row = `
+      <tr>
+        <td>${tbody.rows.length + 1}</td>
+        <td>${now}</td>
+        <td>${data.sensor1 ?? "-"}</td>
+        <td>${data.sensor2 ?? "-"}</td>
+        <td>${data.sensor3 ?? "-"}</td>
+        <td>${data.sensor4 ?? "-"}</td>
+        <td>${data.sensor5 ?? "-"}</td>
+        <td>${data.sensor6 ?? "-"}</td>
+      </tr>
+    `;
+          if (tbody.rows[0] && tbody.rows[0].cells.length === 1) {
+            tbody.innerHTML = row; // hapus "Menunggu data..."
+          } else {
+            tbody.innerHTML += row;
+          }
+
+          // 🔹 Auto scroll ke bawah
+          tbody.parentElement.scrollTop = tbody.parentElement.scrollHeight;
+        } catch (err) {
+          console.error("Fetch error:", err);
+        }
+      }
+      setInterval(fetchSensorData, 3000);
+      fetchSensorData();
+    </script>
+
+    <!-- 🔹 Script Modal + Dark Mode -->
+    <script>
+      function openSettings() {
+        document.getElementById("settingsModal").classList.remove("hidden");
+        document.getElementById("settingsModal").classList.add("flex");
+      }
+      function closeSettings() {
+        document.getElementById("settingsModal").classList.add("hidden");
+      }
+      function saveSettings() {
+        const darkMode = document.getElementById("darkModeToggle").checked;
+        const notif = document.getElementById("notifToggle").checked;
+        const autoScroll = document.getElementById("autoScrollToggle").checked;
+
+        if (darkMode) document.body.classList.add("dark");
+        else document.body.classList.remove("dark");
+
+        localStorage.setItem(
+          "settings",
+          JSON.stringify({ darkMode, notif, autoScroll })
+        );
+        closeSettings();
+      }
+      window.onload = function () {
+        const saved = localStorage.getItem("settings");
+        if (saved) {
+          const settings = JSON.parse(saved);
+          document.getElementById("darkModeToggle").checked =
+            settings.darkMode || false;
+          document.getElementById("notifToggle").checked =
+            settings.notif || false;
+          document.getElementById("autoScrollToggle").checked =
+            settings.autoScroll ?? true;
+          if (settings.darkMode) document.body.classList.add("dark");
+        }
+      };
+    </script>
+  </body>
+</html>

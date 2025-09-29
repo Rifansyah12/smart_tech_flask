@@ -50,15 +50,74 @@
         display: flex;
       }
     }
+
+    .dark {
+      background: #121212 !important;
+      color: #f5f5f5 !important;
+    }
+
+    .dark .card {
+      background: rgba(30, 30, 30, 0.9) !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .dark nav {
+      background: rgba(20, 20, 20, 0.9) !important;
+    }
+
+    .dark table th,
+    .dark table td {
+      border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .dark #settingsModal > div {
+      background: #1e1e1e !important;   /* ubah modal jadi abu gelap */
+      color: #f5f5f5 !important;        /* teks putih */
+    }
+
+    .dark #settingsModal h2 {
+      color: #00ffff; /* judul tetap kontras (aqua) */
+    }
+
+    .dark #settingsModal label span {
+      color: #f5f5f5; /* teks label tetap jelas */
+    }
+
+    .dark #settingsModal button {
+      color: #fff;
+    }
+
+    .dark #settingsModal button.bg-gray-200 {
+      background: #333 !important;
+      color: #f5f5f5 !important;
+    }
+
+    .dark #settingsModal button.bg-gray-200:hover {
+      background: #444 !important;
+    }
+
+    .dark #settingsModal button.bg-indigo-600 {
+      background: #00bcd4 !important; /* aqua biru */
+    }
+
+    .dark #settingsModal button.bg-indigo-600:hover {
+      background: #0097a7 !important;
+    }
+    .dark footer {
+      background: rgba(20, 20, 20, 0.9) !important;
+      color: #f5f5f5 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
   </style>
 </head>
 <body class="text-gray-800">
   <!-- Navigation Menu -->
-  <nav class="bg-white bg-opacity-90 shadow-lg sticky top-0 z-50">
+  <nav class="bg-gradient-to-r from-indigo-500 to-purple-600 bg-opacity-80 backdrop-blur-md shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center">
-          <h1 class="text-2xl font-bold text-indigo-700">Smart Nose</h1>
+          <h1 class="text-2xl font-bold text-white ">Smart Nose</h1>
         </div>
         <div class="flex items-center">
           <button class="menu-toggle md:hidden text-gray-700 hover:text-indigo-600 p-2" onclick="toggleMenu()">
@@ -67,72 +126,72 @@
             </svg>
           </button>
           <div class="nav-menu hidden md:flex space-x-8">
-            <a href="#" class="nav-link text-white bg-indigo-600 px-4 py-2 rounded-full font-medium">Beranda</a>
-            <a href="#" class="nav-link text-gray-700 hover:text-indigo-600 px-4 py-2 rounded-full font-medium hover:bg-gray-100">Data Sensor</a>
-            <a href="#" class="nav-link text-gray-700 hover:text-indigo-600 px-4 py-2 rounded-full font-medium hover:bg-gray-100">Pengaturan</a>
+            <a href="{{ url_for('dashboard.smart_nose') }}" class="nav-link text-white bg-indigo-600 px-4 py-2 rounded-full font-medium">Beranda</a>
+            <a href="{{ url_for('sensor.data_sensor') }}" class="nav-link text-gray-100 hover:text-indigo-600 px-4 py-2 rounded-full font-medium hover:bg-gray-100">Data Sensor</a>
+            <a href="javascript:void(0)" onclick="openSettings()" 
+              class="nav-link text-gray-100 hover:text-indigo-600 px-4 py-2 rounded-full font-medium hover:bg-gray-100">
+              Pengaturan
+            </a>
+
           </div>
         </div>
       </div>
     </div>
   </nav>
-
   <!-- Main Content -->
   <main class="container mx-auto px-4 py-8">
-    <div class="rounded-2xl border bg-white shadow-sm">
-  <!-- Card Header -->
-  <div class="flex items-center justify-between border-b px-6 py-4">
-    <div>
-      <h3 class="text-lg font-semibold">Area Chart - Interactive</h3>
-      <p class="text-sm text-gray-500">
-        Menampilkan total pengunjung untuk rentang waktu tertentu
-      </p>
-    </div>
-    <select id="timeRangeSelect"
-      class="hidden sm:block w-[160px] rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-      <option value="90d">3 Bulan Terakhir</option>
-      <option value="30d">30 Hari Terakhir</option>
-      <option value="7d">7 Hari Terakhir</option>
-    </select>
-  </div>
-
-  <!-- Card Content -->
-  <div class="p-6">
-    <div class="aspect-auto h-[250px] w-full">
-      <canvas id="areaChart"></canvas>
-    </div>
-  </div>
-</div>
-
-    
+    <div class="rounded-2xl border bg-transparent backdrop-blur-sm shadow-lg">
+    <!-- Card Header -->
+      <div class="flex items-center justify-between border-b px-6 py-4">
+        <div>
+          <h3 class="text-lg font-semibold">Area Chart - Interactive</h3>
+          <p class="text-sm text-white">
+            Menampilkan total pengunjung untuk rentang waktu tertentu
+          </p>
+        </div>
+        <select id="timeRangeSelect"
+          class="hidden sm:block w-[160px] rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="90d">3 Bulan Terakhir</option>
+          <option value="30d">30 Hari Terakhir</option>
+          <option value="7d">7 Hari Terakhir</option>
+        </select>
+      </div>
+        <!-- Card Content -->
+        <div class="p-6">
+          <div class="aspect-auto h-[250px] w-full">
+            <canvas id="areaChart"></canvas>
+          </div>
+        </div>
+      </div>
     <!-- Additional Unique Elements -->
     <div class="grid md:grid-cols-3 gap-6 mt-8">
       <!-- Data Monitoring Mqq -->
-      <div class="card p-6 rounded-2xl">
+      <div class="card p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
         <div class="flex items-center justify-center mb-4">
           <span class="text-3xl">📡</span>
         </div>
-        <h3 class="text-xl font-semibold text-center mb-4">Monitoring Data MQTT</h3>
-
+        <h3 class="text-xl font-semibold text-center mb-4 text-white">Monitoring Data MQTT</h3>
         <!-- Table Scrollable -->
         <div class="overflow-x-auto">
-          <table class="min-w-full border border-gray-300 text-xs">
-            <thead class="bg-gray-200 text-gray-700 sticky top-0">
+          <table class="min-w-full text-xs text-white">
+            <thead class="bg-white/20 text-white sticky top-0">
               <tr>
-                <th class="px-2 py-1 border">ID</th>
-                <th class="px-2 py-1 border">Serial Number</th>
-                <th class="px-2 py-1 border">Sensor/Actuator</th>
-                <th class="px-2 py-1 border">Value</th>
-                <th class="px-2 py-1 border">Name</th>
-                <th class="px-2 py-1 border">MQTT Topic</th>
+                <th class="px-2 py-1 border border-white/20">ID</th>
+                <th class="px-2 py-1 border border-white/20">Serial Number</th>
+                <th class="px-2 py-1 border border-white/20">Sensor/Actuator</th>
+                <th class="px-2 py-1 border border-white/20">Value</th>
+                <th class="px-2 py-1 border border-white/20">Name</th>
+                <th class="px-2 py-1 border border-white/20">MQTT Topic</th>
               </tr>
             </thead>
           </table>
+
           <!-- Scroll wrapper untuk body -->
           <div id="mqtt-scroll" class="max-h-48 overflow-y-auto">
-            <table class="min-w-full border border-gray-300 text-xs">
+            <table class="min-w-full text-xs text-white">
               <tbody id="mqtt-table-body" class="text-center text-xs">
                 <tr>
-                  <td class="px-2 py-1 border" colspan="6">Menunggu data...</td>
+                  <td class="px-2 py-1 border border-white/20" colspan="6">Menunggu data...</td>
                 </tr>
               </tbody>
             </table>
@@ -140,15 +199,13 @@
         </div>
       </div>
       <!-- /Monitoring -->
-
       <!-- Device -->
-      <div class="card p-6 rounded-2xl">
+      <div class="card p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
         <div class="flex items-center justify-center mb-4">
-          <span class="text-4xl">⚙️</span>
+          <span class="text-3xl">⚙️</span>
         </div>
-        <h3 class="text-xl font-semibold text-center mb-4">Device Info</h3>
-
-        <div id="device-info" class="space-y-2 text-sm text-gray-700">
+        <h3 class="text-xl font-semibold text-center mb-4 text-white">Device Info</h3>
+        <div id="device-info" class="space-y-2 text-sm text-white">
           <p><span class="font-semibold">Serial Number:</span> Menunggu data...</p>
           <p><span class="font-semibold">MCU Type:</span> -</p>
           <p><span class="font-semibold">Location:</span> -</p>
@@ -157,15 +214,58 @@
         </div>
       </div>
       <!-- /Device -->
+      <!-- Analisis -->
+      <div class="card p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+        <div class="text-3xl">📈</div>
+        <h3 class="text-xl font-semibold text-white mb-4">Analisis Tren</h3>
+        
+        <div id="analysis-content" class="grid grid-cols-2 gap-4 text-sm">
+          <div class="p-3 rounded-xl bg-cyan-500/20 border border-cyan-400/40 text-center">
+            <p class="text-xs text-cyan-300">Rata-rata</p>
+            <p class="text-lg font-bold text-cyan-100">-</p>
+          </div>
+          <div class="p-3 rounded-xl bg-green-500/20 border border-green-400/40 text-center">
+            <p class="text-xs text-green-300">Maks</p>
+            <p class="text-lg font-bold text-green-100">-</p>
+          </div>
+          <div class="p-3 rounded-xl bg-red-500/20 border border-red-400/40 text-center">
+            <p class="text-xs text-red-300">Min</p>
+            <p class="text-lg font-bold text-red-100">-</p>
+          </div>
+          <div class="p-3 rounded-xl bg-purple-500/20 border border-purple-400/40 text-center">
+            <p class="text-xs text-purple-300">Tren</p>
+            <p class="text-lg font-bold text-purple-100">-</p>
+          </div>
+        </div>
+      </div>
 
-      <div class="card p-6 rounded-2xl text-center">
-        <div class="text-4xl mb-2">📈</div> <!-- Handles as text representation -->
-        <h3 class="text-xl font-semibold">Analisis Tren</h3>
-        <p class="text-gray-600">Dapatkan insight mendalam dari data historis sensor untuk pengambilan keputusan.</p>
+      <!-- /analisis  -->
+    </div>
+    <!-- Modal Pengaturan -->
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+      <div class="bg-white rounded-2xl shadow-lg w-96 p-6">
+        <h2 class="text-lg font-bold mb-4">⚙️ Pengaturan</h2>
+        <div class="space-y-3">
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" class="form-checkbox" id="darkModeToggle">
+            <span>Aktifkan Mode Gelap</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" class="form-checkbox" id="notifToggle">
+            <span>Notifikasi MQTT</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" class="form-checkbox" id="autoScrollToggle" checked>
+            <span>Auto-scroll Tabel</span>
+          </label>
+        </div>
+        <div class="mt-6 flex justify-end space-x-3">
+          <button onclick="closeSettings()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Batal</button>
+          <button onclick="saveSettings()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Simpan</button>
+        </div>
       </div>
     </div>
   </main>
-
   <!-- Chart.js Script -->
  <script>
   const ctx = document.getElementById('areaChart').getContext('2d');
@@ -175,7 +275,6 @@
     const res = await fetch("/api/mqtt_data");
     return await res.json();
   }
-
   async function updateChart() {
     const data = await getMqttData();
     if (!data || data.length === 0) return;
@@ -186,28 +285,78 @@
 
     if (!areaChart) {
       areaChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: [now],
-          datasets: [
-            {
-              label: 'Sensor Value',
-              data: [last.value],
-              fill: true,
-              backgroundColor: 'rgba(54, 162, 235, 0.3)',
-              borderColor: 'rgba(54, 162, 235, 1)',
-              tension: 0.4
+      type: 'line',
+      data: {
+        labels: [now],
+        datasets: [
+          {
+            label: 'Sensor Value',
+            data: [last.value],
+            fill: true,
+            backgroundColor: (context) => {
+              const chart = context.chart;
+              const { ctx, chartArea } = chart;
+              if (!chartArea) return null;
+              const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+              gradient.addColorStop(0, 'rgba(0, 255, 204, 0.1)');
+              gradient.addColorStop(1, 'rgba(0, 255, 255, 0.5)');
+              return gradient;
+            },
+            borderColor: 'rgba(0, 255, 255, 0.9)',
+            borderWidth: 2,
+            tension: 0.4,
+            pointRadius: 3,
+            pointBackgroundColor: '#00ffff',
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: '#ffffff',
+            pointHoverBorderColor: '#00ffff',
+            pointHoverBorderWidth: 2,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#e0e0ff',
+              font: { size: 14, weight: 'bold' }
             }
-          ]
+          },
+          tooltip: {
+            backgroundColor: 'rgba(20,20,40,0.9)',
+            borderColor: '#00ffff',
+            borderWidth: 1,
+            titleColor: '#00ffff',
+            bodyColor: '#ffffff',
+            cornerRadius: 8,
+            padding: 10
+          }
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: { beginAtZero: true }
+        scales: {
+          x: {
+            ticks: { color: '#ffffff' },
+            grid: { color: 'rgba(255,255,255,0.3)' }
+          },
+          y: {
+            ticks: { color: '#ffffff' },
+            grid: { color: 'rgba(255,255,255,0.3)' },
+            beginAtZero: true
+          }
+        },
+        animations: {
+          tension: {
+            duration: 1000,
+            easing: 'easeInOutQuad',
+            from: 0.5,
+            to: 0.4,
+            loop: true
           }
         }
-      });
+      }
+    });
+
     } else {
       // Tambah data baru
       areaChart.data.labels.push(now);
@@ -221,7 +370,6 @@
       areaChart.update();
     }
   }
-
   // update chart tiap 3 detik
   setInterval(updateChart, 3000);
 </script>
@@ -276,15 +424,120 @@ async function updateDeviceInfo() {
     console.error("Error fetching device info:", err);
   }
 }
-
 // update pertama kali & setiap 5 detik
 updateDeviceInfo();
 setInterval(updateDeviceInfo, 5000);
 </script>
+<!-- modal navbar pengatiran -->
+<script>
+function openSettings() {
+  document.getElementById("settingsModal").classList.remove("hidden");
+  document.getElementById("settingsModal").classList.add("flex");
+}
+function closeSettings() {
+  document.getElementById("settingsModal").classList.add("hidden");
+}
+function saveSettings() {
+  const darkMode = document.getElementById("darkModeToggle").checked;
+  const notif = document.getElementById("notifToggle").checked;
+  const autoScroll = document.getElementById("autoScrollToggle").checked;
+  console.log("Pengaturan disimpan:", { darkMode, notif, autoScroll });
+  // Contoh: simpan ke localStorage
+  localStorage.setItem("settings", JSON.stringify({ darkMode, notif, autoScroll }));
+  closeSettings();
+}
 
+// seting dark mode
+function saveSettings() {
+  const darkMode = document.getElementById("darkModeToggle").checked;
+  const notif = document.getElementById("notifToggle").checked;
+  const autoScroll = document.getElementById("autoScrollToggle").checked;
 
+  console.log("Pengaturan disimpan:", { darkMode, notif, autoScroll });
 
+  // Terapkan mode gelap
+  if (darkMode) {
+    document.body.classList.add("dark");
+  } else {
+    document.body.classList.remove("dark");
+  }
 
+  // Simpan ke localStorage
+  localStorage.setItem("settings", JSON.stringify({ darkMode, notif, autoScroll }));
+
+  closeSettings();
+}
+window.onload = function() {
+  const saved = localStorage.getItem("settings");
+  if (saved) {
+    const settings = JSON.parse(saved);
+
+    // set checkbox sesuai data tersimpan
+    document.getElementById("darkModeToggle").checked = settings.darkMode || false;
+    document.getElementById("notifToggle").checked = settings.notif || false;
+    document.getElementById("autoScrollToggle").checked = settings.autoScroll ?? true;
+
+    // apply dark mode jika aktif
+    if (settings.darkMode) {
+      document.body.classList.add("dark");
+    }
+  }
+};
+</script>
+
+<!-- Analisis -->
+ <script>
+async function updateAnalysis() {
+  try {
+    const res = await fetch("/api/mqtt_data");
+    const data = await res.json();
+
+    if (!data || data.length === 0) {
+      document.getElementById("analysis-content").innerHTML = "Belum ada data sensor.";
+      return;
+    }
+
+    // Ambil 20 data terakhir
+    const values = data.slice(-20).map(d => parseFloat(d.value)).filter(v => !isNaN(v));
+
+    if (values.length === 0) {
+      document.getElementById("analysis-content").innerHTML = "Data sensor tidak valid.";
+      return;
+    }
+
+    // Hitung statistik
+    const avg = (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2);
+    const min = Math.min(...values).toFixed(2);
+    const max = Math.max(...values).toFixed(2);
+    const trend = values[values.length - 1] - values[0];
+
+    let trendText = trend > 0 ? "📈 Meningkat" : (trend < 0 ? "📉 Menurun" : "➡️ Stabil");
+
+    // Update konten analisis
+    document.getElementById("analysis-content").innerHTML = `
+      <p><span class="font-semibold">Rata-rata:</span> ${avg}</p>
+      <p><span class="font-semibold">Min:</span> ${min}</p>
+      <p><span class="font-semibold">Maks:</span> ${max}</p>
+      <p><span class="font-semibold">Tren:</span> ${trendText}</p>
+    `;
+  } catch (err) {
+    console.error("Error update analysis:", err);
+  }
+}
+
+// update tiap 5 detik
+setInterval(updateAnalysis, 5000);
+updateAnalysis();
+</script>
+<!-- /analisis -->
+  <!-- Footer -->
+  <footer class="mt-12 bg-white/10 backdrop-blur-md border-t border-white/20 py-6 text-center text-sm text-white">
+    <p>© 2025 SmartNose. All rights reserved.</p>
+    <p class="mt-1">
+      Dibuat dengan ❤️ oleh Tim SmartNose | 
+      <a href="#" class="underline hover:text-cyan-300">Kontak</a>
+    </p>
+  </footer>
 </body>
 </html>
 </content>

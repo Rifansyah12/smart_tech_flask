@@ -121,7 +121,7 @@
       <div class="login-box">
         <div class="login-logo">SMART TECH</div>
         <p class="login-box-msg">{{message}}</p>
-        <form action="{{url_for('login')}}" method="post">
+        <form action="{{ url_for('auth.login') }}" method="post">
           <div class="input-group">
             <i class="fas fa-user"></i>
             <input

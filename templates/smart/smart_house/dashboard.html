@@ -1,272 +1,339 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sensor ZNO/RGO</title>
-
-    <!-- Google Font: Source Sans Pro -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
-    />
-    <!-- Font Awesome Icons -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='plugins/fontawesome-free/css/all.min.css') }}"
-    />
-    <!-- DataTables -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}"
-    />
-    <!-- Ion Slider -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='plugins/ion-rangeslider/css/ion.rangeSlider.min.css') }}"
-    />
-    <!-- Theme style -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='dist/css/adminlte.min.css') }}"
-    />
-  </head>
-  <body class="hold-transition sidebar-mini">
-    <div class="wrapper">
-      <!-- Navbar -->
-      <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-        <!-- Left navbar links -->
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#" role="button"
-              ><i class="fas fa-bars"></i
-            ></a>
-          </li>
-          {% if not page or page == "dashboard" %}
-          <li class="nav-item d-none d-sm-inline-block">
-            <a class="nav-link" id="status" style="color: red">Terputus</a>
-          </li>
-          {% endif %}
-          <li class="nav-item d-none d-sm-inline-block">
-            <a href="https://wa.me/+6285795699233" class="nav-link">Kontak</a>
-          </li>
-        </ul>
-        <!-- Right navbar links -->
-        <ul class="navbar-nav ml-auto"></ul>
-      </nav>
-      <!-- /.navbar -->
-
-      <!-- Main Sidebar Container -->
-      <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <!-- Brand Logo -->
-        <a href="#" class="brand-link">
-          <img
-            src="{{ url_for('static', filename='dist/img/AdminLTELogo.png') }}"
-            alt="AdminLTE Logo"
-            class="brand-image img-circle elevation-3"
-            style="opacity: 0.8"
-          />
-          <span class="brand-text font-weight-light">SMART ZNO/RGO</span>
-        </a>
-
-        <!-- Sidebar -->
-        <div class="sidebar">
-          <!-- Sidebar user panel -->
-          <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-              <img
-                src="{{ url_for('static', filename='dist/img/user2-160x160.jpg') }}"
-                class="img-circle elevation-2"
-                alt="User Image"
-              />
-            </div>
-            <div class="info">
-              <a href="#" class="d-block">{{ fullname }}</a>
-            </div>
-          </div>
-
-          <!-- SidebarSearch Form -->
-          <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-              <input
-                class="form-control form-control-sidebar"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <div class="input-group-append">
-                <button class="btn btn-sidebar">
-                  <i class="fas fa-search fa-fw"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Sidebar Menu -->
-          <nav class="mt-2">
-            <ul
-              class="nav nav-pills nav-sidebar flex-column"
-              data-widget="treeview"
-              role="menu"
-              data-accordion="false"
-            >
-              <li class="nav-item">
-                <a
-                  href="{{ url_for('smart_house_dashboard') }}"
-                  class="nav-link"
-                >
-                  <i class="nav-icon fas fa-tachometer-alt"></i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="?page=datasensor" class="nav-link">
-                  <i class="nav-icon fas fa-database"></i>
-                  <p>Data Sensor</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="?page=device" class="nav-link">
-                  <i class="nav-icon fas fa-laptop-code"></i>
-                  <p>Perangkat</p>
-                </a>
-              </li>
-              {% if role == "Admin" %}
-              <li class="nav-item">
-                <a href="?page=user" class="nav-link">
-                  <i class="nav-icon fas fa-users"></i>
-                  <p>Pengguna</p>
-                </a>
-              </li>
-              {% endif %}
-              <li class="nav-item">
-                <a href="{{ url_for('logout') }}" class="nav-link">
-                  <i class="nav-icon fas fa-sign-out-alt"></i>
-                  <p>Logout</p>
-                </a>
-              </li>
-            </ul>
-          </nav>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beranda - SmartNose</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .nav-link {
+      transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .menu-toggle {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 1rem;
+        backdrop-filter: blur(10px);
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .nav-menu.show {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+  <!-- Navigation Menu -->
+  <nav class="bg-gradient-to-r from-indigo-500 to-purple-600 bg-opacity-80 backdrop-blur-md shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold text-white ">ZNO</h1>
         </div>
-        <!-- /.sidebar -->
-      </aside>
-
-      <!-- Content Wrapper -->
-      <div class="content-wrapper p-3">
-        {% if flash_message %}
-        <div class="alert alert-success alert-dismissible">
-          <button type="button" class="close" data-dismiss="alert">
-            &times;
+        <div class="flex items-center">
+          <button class="menu-toggle md:hidden text-gray-700 hover:text-indigo-600 p-2" onclick="toggleMenu()">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
           </button>
-          <h5><i class="icon fas fa-check"></i> Berhasil!</h5>
-          {{ flash_message }}
-        </div>
-        {% endif %}
-
-        <!-- Konten dashboard di sini -->
-        <h1>Selamat Datang di Dashboard SMART NOSE</h1>
-        <div class="content">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-lg-4">
-                <div class="small-box bg-green">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3><span id="ADC">-</span> %</h3>
-
-                    <p>Deteksi Kadar Alkohol (Sensor MQ-3)</p>
-                  </div>
-                  <div class="icon">
-                    <i class="fas fa-temperature-high"></i>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-4">
-                <div class="small-box bg-maroon">
-                  <!-- end loading -->
-                  <div class="inner">
-                    <h3 id="kelembaban">-</h3>
-                    <p>Kelembaban</p>
-                  </div>
-
-                  <div class="icon">
-                    <i class="fas fa-tachometer-alt"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- /.col-md-7 -->
-            <div class="col-13">
-              <div class="card card-primary">
-                <div class="card-header">
-                  <h3 class="card-title">Status Perangkat</h3>
-                </div>
-                <!-- /.card-header -->
-                <div
-                  class="card-body table-responsive p-0"
-                  style="height: 300px"
-                >
-                  <table class="table table-head-fixed text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>Serial Number</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>2</td>
-                        <td
-                          style="color: red"
-                          id="smartnose-uninus/status/<?php echo $row['serial_number']?>"
-                        >
-                          Offline
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!-- /.card -->
-              </div>
-              <!-- /.col-md-6 -->
-            </div>
-            <!-- /.row -->
+          <div class="nav-menu hidden md:flex space-x-8">
+            <a href="#" class="nav-link text-white bg-indigo-600 px-4 py-2 rounded-full font-medium">Beranda</a>
+            <a href="#" class="nav-link text-gray-100 hover:text-indigo-600 px-4 py-2 rounded-full font-medium hover:bg-gray-100">Data Sensor</a>
+            <a href="#" class="nav-link text-gray-100 hover:text-indigo-600 px-4 py-2 rounded-full font-medium hover:bg-gray-100">Pengaturan</a>
           </div>
-          <!-- /.container-fluid -->
         </div>
-        <!-- /.content -->
       </div>
-      <!-- /.content-wrapper -->
-
-      <!-- Footer -->
-      <footer class="main-footer">
-        <div class="float-right d-none d-sm-inline">Versi 5.0</div>
-        <strong
-          >Copyright &copy; Sistem SMART TECH 2025-2028
-          <a href="https://adminlte.io">UNINUS.COM</a>.</strong
-        >
-        All rights reserved.
-      </footer>
     </div>
-    <!-- ./wrapper -->
+  </nav>
 
-    <!-- Scripts -->
-    <script src="{{ url_for('static', filename='plugins/jquery/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='dist/js/adminlte.min.js') }}"></script>
-    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-    <script src="{{ url_for('static', filename='js/pages/dashboard_smart_nose.js')}}"></script>
-  </body>
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <div class="rounded-2xl border bg-transparent backdrop-blur-sm shadow-lg">
+    <!-- Card Header -->
+    <div class="flex items-center justify-between border-b px-6 py-4">
+      <div>
+        <h3 class="text-lg font-semibold">Area Chart - Interactive</h3>
+        <p class="text-sm text-white">
+          Menampilkan total pengunjung untuk rentang waktu tertentu
+        </p>
+      </div>
+      <select id="timeRangeSelect"
+        class="hidden sm:block w-[160px] rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <option value="90d">3 Bulan Terakhir</option>
+        <option value="30d">30 Hari Terakhir</option>
+        <option value="7d">7 Hari Terakhir</option>
+      </select>
+    </div>
+
+  <!-- Card Content -->
+  <div class="p-6">
+    <div class="aspect-auto h-[250px] w-full">
+      <canvas id="areaChart"></canvas>
+    </div>
+  </div>
+</div>
+
+    
+    <!-- Additional Unique Elements -->
+    <div class="grid md:grid-cols-3 gap-6 mt-8">
+      <!-- Data Monitoring Mqq -->
+      <div class="card p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+        <div class="flex items-center justify-center mb-4">
+          <span class="text-3xl">📡</span>
+        </div>
+        <h3 class="text-xl font-semibold text-center mb-4 text-white">Monitoring Data MQTT</h3>
+
+        <!-- Table Scrollable -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs text-white">
+            <thead class="bg-white/20 text-white sticky top-0">
+              <tr>
+                <th class="px-2 py-1 border border-white/20">ID</th>
+                <th class="px-2 py-1 border border-white/20">Serial Number</th>
+                <th class="px-2 py-1 border border-white/20">Sensor/Actuator</th>
+                <th class="px-2 py-1 border border-white/20">Value</th>
+                <th class="px-2 py-1 border border-white/20">Name</th>
+                <th class="px-2 py-1 border border-white/20">MQTT Topic</th>
+              </tr>
+            </thead>
+          </table>
+
+          <!-- Scroll wrapper untuk body -->
+          <div id="mqtt-scroll" class="max-h-48 overflow-y-auto">
+            <table class="min-w-full text-xs text-white">
+              <tbody id="mqtt-table-body" class="text-center text-xs">
+                <tr>
+                  <td class="px-2 py-1 border border-white/20" colspan="6">Menunggu data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- /Monitoring -->
+
+      <!-- Device -->
+      <div class="card p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+        <div class="flex items-center justify-center mb-4">
+          <span class="text-3xl">⚙️</span>
+        </div>
+        <h3 class="text-xl font-semibold text-center mb-4 text-white">Device Info</h3>
+
+        <div id="device-info" class="space-y-2 text-sm text-white">
+          <p><span class="font-semibold">Serial Number:</span> Menunggu data...</p>
+          <p><span class="font-semibold">MCU Type:</span> -</p>
+          <p><span class="font-semibold">Location:</span> -</p>
+          <p><span class="font-semibold">Created Time:</span> -</p>
+          <p><span class="font-semibold">Active:</span> -</p>
+        </div>
+      </div>
+      <!-- /Device -->
+      <div class="card p-6 rounded-2xl text-center bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+        <div class="text-3xl">📈</div>
+        <h3 class="text-xl font-semibold text-white">Analisis Tren</h3>
+        <p class="text-white/80">Dapatkan insight mendalam dari data historis sensor untuk pengambilan keputusan.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Chart.js Script -->
+ <script>
+  const ctx = document.getElementById('areaChart').getContext('2d');
+  let areaChart;
+
+  async function getMqttData() {
+    const res = await fetch("/api/mqtt_data");
+    return await res.json();
+  }
+  async function updateChart() {
+    const data = await getMqttData();
+    if (!data || data.length === 0) return;
+
+    // Ambil hanya data terakhir
+    const last = data[data.length - 1];
+    const now = new Date().toLocaleTimeString();
+
+    if (!areaChart) {
+      areaChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [now],
+        datasets: [
+          {
+            label: 'Sensor Value',
+            data: [last.value],
+            fill: true,
+            backgroundColor: (context) => {
+              const chart = context.chart;
+              const { ctx, chartArea } = chart;
+              if (!chartArea) return null;
+              const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+              gradient.addColorStop(0, 'rgba(0, 255, 204, 0.1)');
+              gradient.addColorStop(1, 'rgba(0, 255, 255, 0.5)');
+              return gradient;
+            },
+            borderColor: 'rgba(0, 255, 255, 0.9)',
+            borderWidth: 2,
+            tension: 0.4,
+            pointRadius: 3,
+            pointBackgroundColor: '#00ffff',
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: '#ffffff',
+            pointHoverBorderColor: '#00ffff',
+            pointHoverBorderWidth: 2,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: '#e0e0ff',
+              font: { size: 14, weight: 'bold' }
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(20,20,40,0.9)',
+            borderColor: '#00ffff',
+            borderWidth: 1,
+            titleColor: '#00ffff',
+            bodyColor: '#ffffff',
+            cornerRadius: 8,
+            padding: 10
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#ffffff' },
+            grid: { color: 'rgba(255,255,255,0.3)' }
+          },
+          y: {
+            ticks: { color: '#ffffff' },
+            grid: { color: 'rgba(255,255,255,0.3)' },
+            beginAtZero: true
+          }
+        },
+        animations: {
+          tension: {
+            duration: 1000,
+            easing: 'easeInOutQuad',
+            from: 0.5,
+            to: 0.4,
+            loop: true
+          }
+        }
+      }
+    });
+
+    } else {
+      // Tambah data baru
+      areaChart.data.labels.push(now);
+      areaChart.data.datasets[0].data.push(last.value);
+
+      // Batasi hanya 20 data terakhir
+      if (areaChart.data.labels.length > 20) {
+        areaChart.data.labels.shift();
+        areaChart.data.datasets[0].data.shift();
+      }
+      areaChart.update();
+    }
+  }
+  // update chart tiap 3 detik
+  setInterval(updateChart, 3000);
+</script>
+<script>
+ async function updateMqttTable() {
+    const res = await fetch("/api/mqtt_data");
+    const data = await res.json();
+    if (!data || data.length === 0) return;
+
+    const last = data[data.length - 1];
+    const tbody = document.getElementById("mqtt-table-body");
+    const scrollBox = document.getElementById("mqtt-scroll");
+
+    // Tambahkan row baru di bawah
+    tbody.innerHTML += `
+      <tr>
+        <td class="px-2 py-1 border">${last.id || "--"}</td>
+        <td class="px-2 py-1 border">${last.serial_number || "--"}</td>
+        <td class="px-2 py-1 border">${last.sensor_actuator || "--"}</td>
+        <td class="px-2 py-1 border">${last.value || "--"}</td>
+        <td class="px-2 py-1 border">${last.name || "--"}</td>
+        <td class="px-2 py-1 border">${last.mqtt_topic || "--"}</td>
+      </tr>
+    `;
+
+    // Scroll otomatis ke bawah
+    scrollBox.scrollTop = scrollBox.scrollHeight;
+  }
+
+  // Update tiap 3 detik
+  setInterval(updateMqttTable, 3000);
+</script>
+<script>
+async function updateDeviceInfo() {
+  try {
+    const res = await fetch("/api/device_info");
+    const d = await res.json();
+
+    if (Object.keys(d).length > 0) {
+      document.getElementById("device-info").innerHTML = `
+        <p><span class="font-semibold">Serial Number:</span> ${d.serial_number}</p>
+        <p><span class="font-semibold">MCU Type:</span> ${d.mcu_type}</p>
+        <p><span class="font-semibold">Location:</span> ${d.location}</p>
+        <p><span class="font-semibold">Created Time:</span> ${d.created_time}</p>
+        <p><span class="font-semibold">Active:</span> ${d.active ? "✅ Active" : "❌ Inactive"}</p>
+      `;
+    } else {
+      document.getElementById("device-info").innerHTML =
+        "<p>Tidak ada data device.</p>";
+    }
+  } catch (err) {
+    console.error("Error fetching device info:", err);
+  }
+}
+
+// update pertama kali & setiap 5 detik
+updateDeviceInfo();
+setInterval(updateDeviceInfo, 5000);
+</script>
+
+
+
+
+</body>
 </html>
+</content>
+</create_file>
